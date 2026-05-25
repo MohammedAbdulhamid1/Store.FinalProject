@@ -61,9 +61,10 @@ namespace Store.FinalProject
                     policy =>
                     {
                         policy
-                            .WithOrigins(
+ .WithOrigins(
     "https://moonlit-gaufre-8077a9.netlify.app",
-    "https://mohammedstore1.netlify.app"
+    "https://mohammedstore1.netlify.app",
+    "https://willowy-mooncake-cbb891.netlify.app"   // ? ??? ????? ??
 )
                             .AllowAnyHeader()
                             .AllowAnyMethod();
