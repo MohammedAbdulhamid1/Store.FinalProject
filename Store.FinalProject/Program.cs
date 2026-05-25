@@ -57,38 +57,34 @@ namespace Store.FinalProject
             // =========================================================
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("FrontendPolicy", policy =>
-                {
-                    policy
-                        .SetIsOriginAllowed(origin =>
-                        {
-                            if (string.IsNullOrEmpty(origin)) return false;
-                            var uri = new Uri(origin);
-                            // Allow any localhost / 127.0.0.1 port in development
-                            return uri.Host == "localhost" || uri.Host == "127.0.0.1" || uri.Host == "mohammedstore1.netlify.app";
-                        })
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
-                });
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy
+                            .WithOrigins(
+                                "https://moonlit-gaufre-8077a9.netlify.app"
+                            )
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
             });
             // =========================================================
             // CORS — allow React frontend (localhost:3000)
             // =========================================================
-          /*  builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("FrontendPolicy", policy =>
-                {
-                    policy
-                        .WithOrigins(
-                            "http://localhost:3000",
-                            "https://localhost:3000"
-                        )
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
-                });
-            });*/
+            /*  builder.Services.AddCors(options =>
+              {
+                  options.AddPolicy("FrontendPolicy", policy =>
+                  {
+                      policy
+                          .WithOrigins(
+                              "http://localhost:3000",
+                              "https://localhost:3000"
+                          )
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                  });
+              });*/
 
 
             builder.Services.AddScoped<IUnitofwork, UnitOfWork>();
@@ -168,7 +164,7 @@ namespace Store.FinalProject
             // =========================================================
             // CORS must come BEFORE Authentication & Authorization
             // =========================================================
-            app.UseCors("FrontendPolicy");
+            app.UseCors("AllowFrontend");
 
             app.UseAuthentication();
             app.UseAuthorization();
