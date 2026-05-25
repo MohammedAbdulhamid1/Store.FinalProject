@@ -38,11 +38,22 @@ namespace Store.FinalProject.Controllers
             if (basket == null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
             return Ok(basket);
         }
-
         [HttpDelete]
+        public async Task<IActionResult> DeleteBasket(string basketid)
+        {
+            if (string.IsNullOrEmpty(basketid))
+                return BadRequest(new ApiErrorResponse(400, "Basket ID is required"));
+
+            await _basketRepository.DeleteBasketAsync(basketid);
+
+            return NoContent();   // ← 204 No Content (الصحيح)
+        }
+
+      /*  [HttpDelete]
         public async Task DeleteBasket(string basketid)
         {
             await _basketRepository.DeleteBasketAsync(basketid);
         }
+      */
     }
 }

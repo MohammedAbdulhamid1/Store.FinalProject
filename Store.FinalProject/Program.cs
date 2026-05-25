@@ -50,6 +50,43 @@ namespace Store.FinalProject
               {
                   options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
               });
+            // =========================================================
+            // CORS — allow any localhost origin (dev: Live Server, React, etc.)
+            // =========================================================
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendPolicy", policy =>
+                {
+                    policy
+                        .SetIsOriginAllowed(origin =>
+                        {
+                            if (string.IsNullOrEmpty(origin)) return false;
+                            var uri = new Uri(origin);
+                            // Allow any localhost / 127.0.0.1 port in development
+                            return uri.Host == "localhost" || uri.Host == "127.0.0.1";
+                        })
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+            // =========================================================
+            // CORS — allow React frontend (localhost:3000)
+            // =========================================================
+          /*  builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("FrontendPolicy", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "http://localhost:3000",
+                            "https://localhost:3000"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });*/
 
 
             builder.Services.AddScoped<IUnitofwork, UnitOfWork>();
@@ -60,8 +97,21 @@ namespace Store.FinalProject
             builder.Services.AddAutoMapper(m => m.AddProfile(new AuthProfile()));
             builder.Services.AddAutoMapper(m => m.AddProfile(new OrderProfile(builder.Configuration)));
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<StoreIdentityDbContext>();
+            /*  builder.Services.AddIdentity<AppUser, IdentityRole>()
+                  .AddEntityFrameworkStores<StoreIdentityDbContext>();*/
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                // ????? ????? ???? ???? (???????)
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
+            })
+           .AddEntityFrameworkStores<StoreIdentityDbContext>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
@@ -105,7 +155,11 @@ namespace Store.FinalProject
             }
             app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
+          //  app.UseHttpsRedirection();
+            // =========================================================
+            // CORS must come BEFORE Authentication & Authorization
+            // =========================================================
+            app.UseCors("FrontendPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -9,11 +9,12 @@ namespace Store.Core.Entites.Dtos.Orders
 {
     public class OrderToReturnDto
     {
+        public int Id { get; set; }
         public string BuyerEmail { get; set; }
 
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
 
-        public string Status { get; set; } 
+        public string Status { get; set; }
 
         public AddressDto ShippingAddress { get; set; }
 
@@ -28,5 +29,12 @@ namespace Store.Core.Entites.Dtos.Orders
         public decimal Total { set; get; }
 
         public string? PaymentIntentId { get; set; } = string.Empty;
+
+
+
+
+
+
+
     }
 }

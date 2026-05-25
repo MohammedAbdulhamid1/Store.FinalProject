@@ -22,14 +22,14 @@ namespace Store.FinalProject.Controllers
             this.productService = productService;
         }
         [HttpGet]
-        [Authorize]
+       // [Authorize]
         public async Task<IActionResult> GetAllProductAsync([FromQuery]ProductSpecParams productSpec)
         {
             
             var result=await productService.GetAllProductsAsync(productSpec);
             return Ok(result );
         }
-        [Authorize]
+       /// [Authorize]
         [HttpGet("Brands")]
         public async Task<IActionResult> GetAllBrandsAsync()
         {
@@ -37,7 +37,7 @@ namespace Store.FinalProject.Controllers
             return Ok(x);
         }
         [HttpGet("Types")]
-        [Authorize]
+      //  [Authorize]
         public async Task<IActionResult> GetAllTypesAsync()
         {
             var x = await productService.GetAllTypesAsync();

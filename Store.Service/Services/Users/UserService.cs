@@ -43,7 +43,7 @@ namespace Store.Service.Services.Users
             
         }
 
-        public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
+    /*    public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
         {
             if (await CheckEmailExistAsync(registerDto.Email)) return null;
             var user = new AppUser()
@@ -64,6 +64,39 @@ namespace Store.Service.Services.Users
                     Token = await _tokenService.CreateTokenAsync(user,_userManager)
                 };
                        
+        }*/
+        public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
+        {
+            if (await CheckEmailExistAsync(registerDto.Email))
+                return null; // أو نرجع exception، لكن نكمل بنفس الطريقة حالياً
+
+            var user = new AppUser()
+            {
+                Email = registerDto.Email,
+                DisplayName = registerDto.DisplayName,
+                PhoneNumber = registerDto.PhoneNumber,
+                UserName = registerDto.Email
+            };
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                // لو حابب تشوف الأخطاء في الـ Console
+                foreach (var error in result.Errors)
+                    Console.WriteLine(error.Description);
+
+                return null;
+            }
+
+            return new UserDto()
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = await _tokenService.CreateTokenAsync(user, _userManager)
+            };
         }
+
     }
+
 }

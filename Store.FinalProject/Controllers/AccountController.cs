@@ -45,6 +45,7 @@ namespace Store.FinalProject.Controllers
 
         }
        
+
         [HttpGet("GetCurrentUser")]
         [Authorize]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
