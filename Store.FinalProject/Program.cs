@@ -115,11 +115,16 @@ namespace Store.FinalProject
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddSingleton<IConnectionMultiplexer>(s=>
-                {
-                    var connection = builder.Configuration.GetConnectionString("Redis");
-                    return ConnectionMultiplexer.Connect(connection);
+            /* builder.Services.AddSingleton<IConnectionMultiplexer>(s=>
+                 {
+                     var connection = builder.Configuration.GetConnectionString("Redis");
+                     return ConnectionMultiplexer.Connect(connection);
 
+             });*/
+            builder.Services.AddSingleton<IConnectionMultiplexer>(s =>
+            {
+                var connection = builder.Configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(connection);
             });
             builder.Services.AddAuthentication(options =>
             {
