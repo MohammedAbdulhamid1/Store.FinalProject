@@ -45,7 +45,7 @@ namespace Store.Service.Services.Token
 
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                expires: DateTime.Now.AddDays(double.Parse(_configuration["Jwt:DurationInDays"])),
+                expires: DateTime.UtcNow.AddDays(double.Parse(_configuration["Jwt:DurationInDays"])),
                 claims: authclaims,
                 signingCredentials:Credentials
 

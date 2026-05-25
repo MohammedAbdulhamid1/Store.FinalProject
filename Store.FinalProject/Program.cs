@@ -42,13 +42,15 @@ namespace Store.FinalProject
             builder.Services.AddDbContext<StoreDbContext>(
                 options =>
                 {
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("Store.Repository"));
                 });
             /*identity*/
             builder.Services.AddDbContext<StoreIdentityDbContext>(
               options =>
               {
-                  options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+              options.UseNpgsql(builder.Configuration.GetConnectionString("IdentityConnection"),
+                  b => b.MigrationsAssembly("Store.Repository"));
               });
             // =========================================================
             // CORS — allow any localhost origin (dev: Live Server, React, etc.)
@@ -63,7 +65,7 @@ namespace Store.FinalProject
                             if (string.IsNullOrEmpty(origin)) return false;
                             var uri = new Uri(origin);
                             // Allow any localhost / 127.0.0.1 port in development
-                            return uri.Host == "localhost" || uri.Host == "127.0.0.1";
+                            return uri.Host == "localhost" || uri.Host == "127.0.0.1" || uri.Host == "mohammedstore1.netlify.app";
                         })
                         .AllowAnyHeader()
                         .AllowAnyMethod()

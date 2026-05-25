@@ -9,6 +9,6 @@ namespace Store.Core.Entites
     public class BaseEntity<Tkey>
     {
         public Tkey Id { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
