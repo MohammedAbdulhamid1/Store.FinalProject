@@ -62,8 +62,9 @@ namespace Store.FinalProject
                     {
                         policy
                             .WithOrigins(
-                                "https://moonlit-gaufre-8077a9.netlify.app"
-                            )
+    "https://moonlit-gaufre-8077a9.netlify.app",
+    "https://mohammedstore1.netlify.app"
+)
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
